@@ -1,17 +1,21 @@
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import pageObjectModel.MainPage;
-import pageObjectModel.OrderPage;
-
+import ru.praktikum.qa.scooter.page.object.model.MainPage;
+import ru.praktikum.qa.scooter.page.object.model.OrderPage;
 import static org.junit.Assert.assertEquals;
 
-public class OrderButtonsTests {
+public class OrderButtonsTests extends BaseTest{
+
+    @Before
+    public void startUp() {
+        startChrome();
+        // Метод для запуска в Firefox:
+        //startFirefox();
+    }
     @Test
-    public void testUpperOrderButtonInChrome() {
-        WebDriver driver = new ChromeDriver();
-        driver.get("https://qa-scooter.praktikum-services.ru/");
+    public void testUpperOrderButton() {
+        driver.get(MainPage.URL);
 
         MainPage mainPageObj = new MainPage(driver);
         mainPageObj.clickCookiesButton();
@@ -19,13 +23,10 @@ public class OrderButtonsTests {
 
         OrderPage orderPageObj = new OrderPage(driver);
         assertEquals(true, orderPageObj.isOrderFormAvailable());
-
-        driver.quit();
     }
     @Test
-    public void testLowerOrderButtonInChrome() {
-        WebDriver driver = new ChromeDriver();
-        driver.get("https://qa-scooter.praktikum-services.ru/");
+    public void testLowerOrderButton() {
+        driver.get(MainPage.URL);
 
         MainPage mainPageObj = new MainPage(driver);
         mainPageObj.clickCookiesButton();
@@ -33,36 +34,9 @@ public class OrderButtonsTests {
 
         OrderPage orderPageObj = new OrderPage(driver);
         assertEquals(true, orderPageObj.isOrderFormAvailable());
-
-        driver.quit();
     }
-
-    @Test
-    public void testUpperOrderButtonInFirefox() {
-        WebDriver driver = new FirefoxDriver();
-        driver.get("https://qa-scooter.praktikum-services.ru/");
-
-        MainPage mainPageObj = new MainPage(driver);
-        mainPageObj.clickCookiesButton();
-        mainPageObj.clickUpperOrderButton();
-
-        OrderPage orderPageObj = new OrderPage(driver);
-        assertEquals(true, orderPageObj.isOrderFormAvailable());
-
-        driver.quit();
-    }
-    @Test
-    public void testLowerOrderButtonInFirefox() {
-        WebDriver driver = new FirefoxDriver();
-        driver.get("https://qa-scooter.praktikum-services.ru/");
-
-        MainPage mainPageObj = new MainPage(driver);
-        mainPageObj.clickCookiesButton();
-        mainPageObj.clickLowerOrderButton();
-
-        OrderPage orderPageObj = new OrderPage(driver);
-        assertEquals(true, orderPageObj.isOrderFormAvailable());
-
+    @After
+    public void tearDown() {
         driver.quit();
     }
 }

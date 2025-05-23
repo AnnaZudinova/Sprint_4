@@ -1,15 +1,14 @@
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import pageObjectModel.MainPage;
-import pageObjectModel.OrderPage;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import ru.praktikum.qa.scooter.page.object.model.MainPage;
+import ru.praktikum.qa.scooter.page.object.model.OrderPage;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(Parameterized.class)
-public class OrderFormTests {
+public class OrderFormTests extends BaseTest {
     private final String name;
     private final String surname;
     private final String address;
@@ -32,18 +31,23 @@ public class OrderFormTests {
         this.comment = comment;
     }
 
-    @Parameterized.Parameters
-    public static Object[][] getUserData() {
+    @Parameterized.Parameters(name="Тестовые данные: {0},{1}")
+    public static Object[][] getTestData() {
         return new Object[][]{
                 {"Олег", "Вещий", "Москва, Красная площадь, дом 4", "Сокол", "89997776655", "11.12.2025", "сутки", "серый", "К 12 часам"},
-                {"Александра", "Николевич", "Москва, Литейная улица, д.25, кв.15","Владыкино", "+73335557744", "19.08.25", "двое суток", "черный", ""},
+                {"Александра", "Николевич", "Москва, Литейная улица, д.25, кв.15","Владыкино", "+73335557744", "19.08.25", "двое суток", "черный", ""}
         };
     }
 
+    @Before
+    public void startUp() {
+        startChrome();
+        //Метод для запуска в Firefox:
+        //startFirefox();
+    }
     @Test
-    public void testOrderInFirefox() {
-        WebDriver driver = new FirefoxDriver();
-        driver.get("https://qa-scooter.praktikum-services.ru/");
+    public void testOrder() {
+        driver.get(MainPage.URL);
 
         MainPage mainPageObj = new MainPage(driver);
         mainPageObj.clickCookiesButton();
@@ -54,27 +58,10 @@ public class OrderFormTests {
 
         assertEquals(true, orderPageObj.checkOrderInfoAppearance());
 
-
-        driver.quit();
-
     }
-
-    @Test
-    public void testOrderInChrome() {
-        WebDriver driver = new ChromeDriver();
-        driver.get("https://qa-scooter.praktikum-services.ru/");
-
-        MainPage mainPageObj = new MainPage(driver);
-        mainPageObj.clickCookiesButton();
-        mainPageObj.clickUpperOrderButton();
-
-        OrderPage orderPageObj = new OrderPage(driver);
-        orderPageObj.submitOrder(name,surname,address,metroStation,phoneNumber,date,rentalPeriod,color,comment);
-
-        assertEquals(true, orderPageObj.checkOrderInfoAppearance());
-
+    @After
+    public void tearDown() {
         driver.quit();
     }
-
 
 }
